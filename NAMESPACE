@@ -1,0 +1,9 @@
+exportPattern("^[[:alpha:]]+")
+
+import(httr)
+import(RJSONIO)
+import(httr)
+import(data.table)
+import(dplyr)
+import(XML)
+import(stringr)
