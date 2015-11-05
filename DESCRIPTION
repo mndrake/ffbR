@@ -1,11 +1,11 @@
 Package: ffbR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Fantasy Football
 Version: 0.1
 Date: 2015-11-01
 Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Maintainer: David Carlson
+Description: Download Fantasy Football Roster and Projections
+License: MIT
 LazyData: TRUE
 Imports: XML, dplyr, stringr, httr, RJSONIO, data.table
