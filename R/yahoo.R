@@ -1,10 +1,10 @@
-# library(httr)
-# library(RJSONIO)
-# library(data.table)
-# library(magrittr)
-# library(stringr)
-# source('fantasypros.R')
-
+#' Get security token for Yahoo Fantasy API
+#'
+#' @param token_file text file with key and secret
+#'
+#' @export
+#'
+#' @importFrom httr oauth_app oauth1.0_token oauth_endpoints
 get_token <- function(token_file){
   creds = read.table(token_file, stringsAsFactors = FALSE)
   consumer_key = creds[1,1]
@@ -13,6 +13,15 @@ get_token <- function(token_file){
   oauth1.0_token(oauth_endpoints("yahoo"), myapp)
 }
 
+#' Get league key for your fantasy league
+#'
+#' @param league_id yahoo league id
+#' @param token security token
+#'
+#' @export
+#'
+#' @importFrom httr GET config
+#' @importFrom RJSONIO fromJSON
 get_league_key <- function(league_id, token){
   game_info = GET("http://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json", config(token = token)) %>%
     as.character() %>%
@@ -22,6 +31,14 @@ get_league_key <- function(league_id, token){
     paste0('.l.', league_id)
 }
 
+#' Get team rosters for your league
+#'
+#' @param league_key league key for Yahoo fantasy football
+#' @param token security token
+#'
+#' @export
+#'
+#' @importFrom data.table rbindlist
 get_rosters <- function(league_key, token) {
   get_team <- function(team_id) {
     my_team_key = paste0(league_key, ".t.", team_id)

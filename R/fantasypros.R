@@ -1,10 +1,24 @@
 # fantasy football projections - fantasypros.com
 
+# hack to remove package checks due to dplyr
+utils::globalVariables(c("passYds", "passTds", "rushYds", "rushTds", "rec", "recYds", "recTds", "fumbles", "fg", "fgAtt", "xp"))
+
+#' Get FantasyPro weekly projections
+#'
+#' @param week week of the football season
+#'
+#' @return Projections using custom scoring
+#' @export
+#'
+#' @examples
+#' get_fantasypros(week = 9)
+#' @importFrom XML readHTMLTable
+#' @importFrom dplyr full_join mutate tbl_dt %>%
 get_fantasypros <- function(week) {
 
   # quarterbacks
   qb_fp <- readHTMLTable(paste0('http://www.fantasypros.com/nfl/projections/qb.php?week=', week), stringsAsFactors = FALSE)$data
-  colnames(qb_fp) <- c('player','passAtt','passComp','passYds','passTds','passInt','rushAtt','rushYds','rushTds','fumbles','points')
+  colnames(qb_fp) <- c("player", "passAtt", "passComp", "passYds", "passTds", "passInt", "rushAtt", "rushYds", "rushTds", "fumbles", "points")
   qb_fp$pos <- 'QB'
 
   # widerecivers
@@ -29,11 +43,11 @@ get_fantasypros <- function(week) {
 
   # combine
   all_fp <- qb_fp %>% full_join(wr_fp) %>% full_join(rb_fp) %>% full_join(te_fp) %>% full_join(k_fp)
-  numericVars <- c(intersect(colnames(all_fp), scoreCategories), 'points')
+  numericVars <- c(intersect(colnames(all_fp), .scoreCategories), 'points')
   all_fp[, numericVars] <- sapply(all_fp[, numericVars], as.numeric)
   all_fp[, numericVars][is.na(all_fp[, numericVars])] <- 0
-  all_fp$name <- sapply(all_fp$player, clean_name)
-  all_fp$team <- sapply(all_fp$player, clean_team)
+  all_fp$name <- sapply(all_fp$player, .clean_name)
+  all_fp$team <- sapply(all_fp$player, .clean_team)
 
   all_fp %>%
     mutate(custom_points = passYds / 20 + passTds * 4 + rushYds / 10 + rushTds * 6 + rec + recYds / 10 + recTds * 6 - fumbles * 2 + fg * 3 - (fgAtt - fg) + xp) %>%
