@@ -3,7 +3,7 @@ Type: Package
 Title: Fantasy Football
 Version: 0.1
 Date: 2015-11-01
-Author: Who wrote it
+Author: David Carlson
 Maintainer: David Carlson<mndrake22@mac.com>
 Description: Download Fantasy Football Roster and Projections
 License: MIT
